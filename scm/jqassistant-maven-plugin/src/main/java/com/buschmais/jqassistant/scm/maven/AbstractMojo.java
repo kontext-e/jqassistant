@@ -74,6 +74,12 @@ public abstract class AbstractMojo extends org.apache.maven.plugin.AbstractMojo 
     protected List<String> constraints;
 
     /**
+     * The list of test names to be validated.
+     */
+    @Parameter(property = "jqassistant.tests")
+    protected List<String> tests;
+
+    /**
      * The list of group names to be executed.
      */
     @Parameter(property = "jqassistant.groups")
@@ -194,7 +200,7 @@ public abstract class AbstractMojo extends org.apache.maven.plugin.AbstractMojo 
         RuleSet ruleSet = readRules(baseProject);
         validateRuleSet(ruleSet);
         try {
-            return ruleSelector.getEffectiveRuleSet(ruleSet, concepts, constraints, groups);
+            return ruleSelector.getEffectiveRuleSet(ruleSet, concepts, constraints, tests, groups);
         } catch (RuleSetResolverException e) {
             throw new MojoExecutionException("Cannot resolve rules.", e);
         }

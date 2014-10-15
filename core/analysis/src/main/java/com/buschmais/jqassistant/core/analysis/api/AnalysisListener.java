@@ -4,6 +4,7 @@ import com.buschmais.jqassistant.core.analysis.api.rule.Concept;
 import com.buschmais.jqassistant.core.analysis.api.rule.Constraint;
 import com.buschmais.jqassistant.core.analysis.api.rule.Group;
 import com.buschmais.jqassistant.core.analysis.api.rule.Rule;
+import com.buschmais.jqassistant.core.analysis.api.rule.Test;
 
 public interface AnalysisListener<E extends AnalysisListenerException> {
 
@@ -22,6 +23,10 @@ public interface AnalysisListener<E extends AnalysisListenerException> {
     void beginConstraint(Constraint constraint) throws E;
 
     void endConstraint() throws E;
+
+    void beginTest(Test test) throws E;
+
+    void endTest() throws E;
 
     void setResult(Result<? extends Rule> result) throws E;
 

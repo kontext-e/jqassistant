@@ -37,6 +37,7 @@ public abstract class AbstractJQAssistantApp extends AbstractApp {
 
     private static final Pattern CONCEPTS_PATTERN = Pattern.compile("concepts=(.*)");
     private static final Pattern CONSTRAINTS_PATTERN = Pattern.compile("constraints=(.*)");
+    private static final Pattern TEST_PATTERN = Pattern.compile("tests=(.*)");
     private static final Pattern GROUPS_PATTERN = Pattern.compile("groups=(.*)");
 
     private PluginConfigurationReader pluginConfigurationReader;
@@ -89,11 +90,14 @@ public abstract class AbstractJQAssistantApp extends AbstractApp {
     protected RuleSet getEffectiveRuleSet(AppCommandParser parser) throws RuleSetResolverException {
         List<String> conceptNames = new ArrayList<>();
         List<String> constraintNames = new ArrayList<>();
+        List<String> testNames = new ArrayList<>();
         List<String> groupNames = new ArrayList<>();
         for (String argument : parser.arguments()) {
             if (parseArgument(CONCEPTS_PATTERN, argument, conceptNames))
                 ;
             else if (parseArgument(CONSTRAINTS_PATTERN, argument, constraintNames))
+                ;
+            else if (parseArgument(TEST_PATTERN, argument, constraintNames))
                 ;
             else if (parseArgument(GROUPS_PATTERN, argument, groupNames))
                 ;
@@ -103,7 +107,7 @@ public abstract class AbstractJQAssistantApp extends AbstractApp {
         }
         RuleSet availableRules = getAvailableRules();
         RuleSelector ruleSelector = new RuleSelectorImpl();
-        return ruleSelector.getEffectiveRuleSet(availableRules, conceptNames, constraintNames, groupNames);
+        return ruleSelector.getEffectiveRuleSet(availableRules, conceptNames, constraintNames, testNames, groupNames);
     }
 
     private boolean parseArgument(Pattern pattern, String argument, List<String> values) {

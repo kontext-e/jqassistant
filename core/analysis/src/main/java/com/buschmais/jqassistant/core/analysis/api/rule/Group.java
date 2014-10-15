@@ -29,6 +29,11 @@ public class Group implements Rule {
     private Set<Constraint> constraints = new HashSet<Constraint>();
 
     /**
+     * The set of tests contained in the group.
+     */
+    private Set<Test> tests = new HashSet<>();
+
+    /**
      * The set of groups contained in the group.
      */
     private Set<Group> groups = new HashSet<Group>();
@@ -65,6 +70,14 @@ public class Group implements Rule {
         this.constraints = constraints;
     }
 
+    public Set<Test> getTests() {
+        return tests;
+    }
+
+    public void setTests(final Set<Test> tests) {
+        this.tests = tests;
+    }
+
     public Set<Group> getGroups() {
         return groups;
     }
@@ -92,6 +105,6 @@ public class Group implements Rule {
 
     @Override
     public String toString() {
-        return "Group{" + "id='" + id + '\'' + ", concepts=" + concepts + ", constraints=" + constraints + ", groups=" + groups + '}';
+        return "Group{" + "id='" + id + '\'' + ", concepts=" + concepts + ", constraints=" + constraints + ", tests=" + tests + ", groups=" + groups + '}';
     }
 }

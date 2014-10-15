@@ -7,6 +7,7 @@ import com.buschmais.jqassistant.core.analysis.api.rule.Concept;
 import com.buschmais.jqassistant.core.analysis.api.rule.Constraint;
 import com.buschmais.jqassistant.core.analysis.api.rule.Group;
 import com.buschmais.jqassistant.core.analysis.api.rule.Rule;
+import com.buschmais.jqassistant.core.analysis.api.rule.Test;
 
 import java.util.Map;
 import java.util.TreeMap;
@@ -21,6 +22,8 @@ public class InMemoryReportWriter implements AnalysisListener<AnalysisListenerEx
     private Map<String, Result<Concept>> conceptResults = new TreeMap<>();
 
     private Map<String, Result<Constraint>> constraintViolations = new TreeMap<>();
+
+    private List<Result<Test>> failedTests = new ArrayList<>();
 
     private Result<? extends Rule> currentResult;
 
@@ -59,6 +62,15 @@ public class InMemoryReportWriter implements AnalysisListener<AnalysisListenerEx
     }
 
     @Override
+    public void beginTest(final Test test) throws AnalysisListenerException {
+    }
+
+    @Override
+    public void endTest() throws AnalysisListenerException {
+        addResult(this.failedTests);
+    }
+
+    @Override
     public void setResult(Result<? extends Rule> result) throws AnalysisListenerException {
         this.currentResult = result;
     }
@@ -69,6 +81,10 @@ public class InMemoryReportWriter implements AnalysisListener<AnalysisListenerEx
 
     public Map<String, Result<Constraint>> getConstraintViolations() {
         return this.constraintViolations;
+    }
+
+    public List<Result<Test>> getFailedTests() {
+        return failedTests;
     }
 
     @SuppressWarnings("unchecked")

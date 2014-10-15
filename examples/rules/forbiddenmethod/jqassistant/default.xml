@@ -14,6 +14,23 @@
         ]]></cypher>
     </constraint>
 
+    <test id="example:ConstructorOfDateMustNotBeUsedTest">
+        <description>Constructors of java.util.Date must not be used.</description>
+        <cypher><![CDATA[
+            match
+                (dateType:Type)-[:DECLARES]->(forbiddenMethod:Method),
+                (type:Type)-[:DECLARES]->(method:Method)-[:INVOKES]->(forbiddenMethod)
+            where
+                dateType.fqn = 'java.util.Date'
+                and forbiddenMethod:Constructor
+            return
+                method.name as Methodname
+        ]]></cypher>
+        <assert>
+            thisMethodUsesDateToShowAConstraintViolation
+        </assert>
+    </test>
+
     <group id="default">
         <includeConstraint refId="example:ConstructorOfDateMustNotBeUsed"/>
     </group>

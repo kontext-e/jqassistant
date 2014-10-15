@@ -13,11 +13,13 @@ public class RuleSet {
 
     private Map<String, Concept> concepts = new TreeMap<>();
     private Map<String, Constraint> constraints = new TreeMap<>();
+    private Map<String, Test> tests = new TreeMap<>();
     private Map<String, Group> groups = new TreeMap<>();
     private Map<String, MetricGroup> metricGroups = new TreeMap<>();
 
     private Set<String> missingConcepts = new TreeSet<>();
     private Set<String> missingConstraints = new TreeSet<>();
+    private Set<String> missingTests = new TreeSet<>();
     private Set<String> missingGroups = new TreeSet<>();
 
     public Map<String, Concept> getConcepts() {
@@ -26,6 +28,10 @@ public class RuleSet {
 
     public Map<String, Constraint> getConstraints() {
         return constraints;
+    }
+
+    public Map<String, Test> getTests() {
+        return tests;
     }
 
     public Map<String, Group> getGroups() {
@@ -38,6 +44,10 @@ public class RuleSet {
 
     public Set<String> getMissingConcepts() {
         return missingConcepts;
+    }
+
+    public Set<String> getMissingTests() {
+        return missingTests;
     }
 
     public Set<String> getMissingConstraints() {

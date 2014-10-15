@@ -10,6 +10,7 @@ import com.buschmais.jqassistant.core.analysis.api.rule.Concept;
 import com.buschmais.jqassistant.core.analysis.api.rule.Constraint;
 import com.buschmais.jqassistant.core.analysis.api.rule.Group;
 import com.buschmais.jqassistant.core.analysis.api.rule.Rule;
+import com.buschmais.jqassistant.core.analysis.api.rule.Test;
 import com.buschmais.jqassistant.core.report.api.ReportException;
 import com.buschmais.jqassistant.core.report.api.ReportPlugin;
 import com.buschmais.jqassistant.plugin.java.api.model.TypeDescriptor;
@@ -58,6 +59,16 @@ public class CustomReportPlugin implements ReportPlugin {
 
     @Override
     public void endConstraint() throws ReportException {
+    }
+
+    @Override
+    public void beginTest(final Test test) throws ReportException {
+
+    }
+
+    @Override
+    public void endTest() throws ReportException {
+
     }
 
     @Override

@@ -23,7 +23,7 @@ public interface RuleSelector {
      * @throws RuleSetResolverException
      *             If resolving fails.
      */
-    public RuleSet getEffectiveRuleSet(RuleSet ruleSet, List<String> conceptNames, List<String> constraintNaimes, List<String> groupNames)
+    public RuleSet getEffectiveRuleSet(RuleSet ruleSet, List<String> conceptNames, List<String> constraintNames, List<String> testNames, List<String> groupNames)
             throws RuleSetResolverException;
 
 }

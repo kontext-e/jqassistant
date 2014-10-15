@@ -7,6 +7,7 @@ import com.buschmais.jqassistant.core.analysis.api.rule.Concept;
 import com.buschmais.jqassistant.core.analysis.api.rule.Constraint;
 import com.buschmais.jqassistant.core.analysis.api.rule.Group;
 import com.buschmais.jqassistant.core.analysis.api.rule.Rule;
+import com.buschmais.jqassistant.core.analysis.api.rule.Test;
 
 /**
  * A {@link com.buschmais.jqassistant.core.analysis.api.AnalysisListener}
@@ -102,6 +103,26 @@ public class CompositeReportWriter implements AnalysisListener<AnalysisListenerE
             @Override
             public void run(AnalysisListener reportWriter) throws AnalysisListenerException {
                 reportWriter.endConstraint();
+            }
+        });
+    }
+
+    @Override
+    public void beginTest(final Test test) throws AnalysisListenerException {
+        run(new DelegateOperation() {
+            @Override
+            public void run(AnalysisListener reportWriter) throws AnalysisListenerException {
+                reportWriter.beginTest(test);
+            }
+        });
+    }
+
+    @Override
+    public void endTest() throws AnalysisListenerException {
+        run(new DelegateOperation() {
+            @Override
+            public void run(AnalysisListener reportWriter) throws AnalysisListenerException {
+                reportWriter.endTest();
             }
         });
     }

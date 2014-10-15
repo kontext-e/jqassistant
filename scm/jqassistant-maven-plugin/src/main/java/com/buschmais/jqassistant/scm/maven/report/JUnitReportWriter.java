@@ -16,6 +16,7 @@ import com.buschmais.jqassistant.core.analysis.api.rule.Concept;
 import com.buschmais.jqassistant.core.analysis.api.rule.Constraint;
 import com.buschmais.jqassistant.core.analysis.api.rule.Group;
 import com.buschmais.jqassistant.core.analysis.api.rule.Rule;
+import com.buschmais.jqassistant.core.analysis.api.rule.Test;
 import com.buschmais.jqassistant.plugin.junit4.impl.schema.Error;
 import com.buschmais.jqassistant.plugin.junit4.impl.schema.Failure;
 import com.buschmais.jqassistant.plugin.junit4.impl.schema.ObjectFactory;
@@ -138,6 +139,16 @@ public class JUnitReportWriter implements AnalysisListener<AnalysisListenerExcep
 
     @Override
     public void endConstraint() throws AnalysisListenerException {
+    }
+
+    @Override
+    public void beginTest(final Test test) throws AnalysisListenerException {
+        this.ruleBeginTimestamp = System.currentTimeMillis();
+    }
+
+    @Override
+    public void endTest() throws AnalysisListenerException {
+
     }
 
     @Override

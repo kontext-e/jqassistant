@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +14,7 @@ import com.buschmais.jqassistant.core.analysis.api.rule.Concept;
 import com.buschmais.jqassistant.core.analysis.api.rule.Constraint;
 import com.buschmais.jqassistant.core.analysis.api.rule.Group;
 import com.buschmais.jqassistant.core.analysis.api.rule.RuleSet;
+import com.buschmais.jqassistant.core.analysis.api.rule.Test;
 
 /**
  * Implementation of the {@link RuleSelector}.
@@ -24,19 +24,20 @@ public class RuleSelectorImpl implements RuleSelector {
     private static final Logger LOGGER = LoggerFactory.getLogger(RuleSelectorImpl.class);
 
     @Override
-    public RuleSet getEffectiveRuleSet(RuleSet ruleSet, List<String> conceptNames, List<String> constraintNames, List<String> groupNames)
+    public RuleSet getEffectiveRuleSet(RuleSet ruleSet, List<String> conceptNames, List<String> constraintNames, List<String> testNames, List<String> groupNames)
             throws RuleSetResolverException {
         RuleSet effectiveRuleSet = new RuleSet();
         // Use the default group if no group, constraint or concept is
         // specified.
         List<String> selectedGroupNames;
         if (CollectionUtils.isEmpty(groupNames) && CollectionUtils.isEmpty(constraintNames) && CollectionUtils.isEmpty(conceptNames)) {
-            selectedGroupNames = Arrays.asList(new String[] { DEFAULT_GROUP });
+            selectedGroupNames = Arrays.asList(DEFAULT_GROUP);
         } else {
             selectedGroupNames = groupNames;
         }
         resolveConcepts(getSelectedConcepts(conceptNames, ruleSet), effectiveRuleSet);
         resolveConstraints(getSelectedConstraints(constraintNames, ruleSet), effectiveRuleSet);
+        resolveTests(getSelectedTests(testNames, ruleSet), effectiveRuleSet);
         resolveGroups(getSelectedGroups(selectedGroupNames, ruleSet), effectiveRuleSet);
         return effectiveRuleSet;
     }
@@ -56,6 +57,7 @@ public class RuleSelectorImpl implements RuleSelector {
                 resolveGroups(group.getGroups(), targetRuleSet);
                 resolveConcepts(group.getConcepts(), targetRuleSet);
                 resolveConstraints(group.getConstraints(), targetRuleSet);
+                resolveTests(group.getTests(), targetRuleSet);
             }
         }
     }
@@ -73,6 +75,23 @@ public class RuleSelectorImpl implements RuleSelector {
             if (!targetRuleSet.getConstraints().containsKey(constraint.getId())) {
                 targetRuleSet.getConstraints().put(constraint.getId(), constraint);
                 resolveConcepts(constraint.getRequiresConcepts(), targetRuleSet);
+            }
+        }
+    }
+
+    /**
+     * Resolve the given selected test names into the target rules set.
+     *
+     * @param tests
+     *            The selected test names.
+     * @param targetRuleSet
+     *            The target rules set.
+     */
+    private void resolveTests(Collection<Test> tests, RuleSet targetRuleSet) {
+        for (Test test : tests) {
+            if (!targetRuleSet.getTests().containsKey(test.getId())) {
+                targetRuleSet.getTests().put(test.getId(), test);
+                resolveConcepts(test.getRequiresConcepts(), targetRuleSet);
             }
         }
     }
@@ -134,14 +153,39 @@ public class RuleSelectorImpl implements RuleSelector {
         final List<Constraint> selectedConstraints = new ArrayList<>();
         if (constraintNames != null) {
             for (String constraintName : constraintNames) {
-                Constraint concept = ruleSet.getConstraints().get(constraintName);
-                if (concept == null) {
+                Constraint constraint = ruleSet.getConstraints().get(constraintName);
+                if (constraint == null) {
                     throw new RuleSetResolverException("The constraint '" + constraintName + "' is not defined.");
                 }
-                selectedConstraints.add(concept);
+                selectedConstraints.add(constraint);
             }
         }
         return selectedConstraints;
+    }
+
+    /**
+     * Return the selected tests.
+     *
+     * @param testNames
+     *            The list of test names.
+     * @param ruleSet
+     *            The {@link RuleSet}.
+     * @return The selected tests.
+     * @throws RuleSetResolverException
+     *             If an undefined test is referenced.
+     */
+    private List<Test> getSelectedTests(List<String> testNames, RuleSet ruleSet) throws RuleSetResolverException {
+        final List<Test> selectedTests = new ArrayList<>();
+        if (testNames != null) {
+            for (String testName : testNames) {
+                Test test = ruleSet.getTests().get(testName);
+                if (test == null) {
+                    throw new RuleSetResolverException("The test '" + testName + "' is not defined.");
+                }
+                selectedTests.add(test);
+            }
+        }
+        return selectedTests;
     }
 
     /**
